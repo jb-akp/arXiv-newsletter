@@ -22,7 +22,7 @@ DATE_WINDOWS = [
 # --- Email Config ---
 GMAIL_USER = os.environ.get('GMAIL_USER', '')
 GMAIL_APP_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD', '')
-GMAIL_TO = os.environ.get('GMAIL_TO', 'jimmybradford55@yahoo.com')
+GMAIL_TO = os.environ.get('GMAIL_TO', 'william@akapulu.com')
 GMAIL_SENDER_NAME = 'Akapulu Digital Humans Digest'
 
 # --- Claude Config ---

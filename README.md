@@ -11,7 +11,7 @@ Daily newsletter covering talking head, talking avatar, and audio-visual speech 
    export ANTHROPIC_API_KEY=sk-ant-...
    export GMAIL_USER=your@gmail.com
    export GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
-   export GMAIL_TO=jimmybradford55@yahoo.com  # optional, this is the default
+   export GMAIL_TO=william@akapulu.com  # optional, this is the default
    ```
 
 3. **Install dependencies**:
