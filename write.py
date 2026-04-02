@@ -60,18 +60,16 @@ STYLE RULES:
 STRUCTURE:
 1. Heading: This Week in Review as bold h2
 2. Overview: 2-3 TLDR bullets in callout box, beginner-friendly.
-3. Deep Dive: 2-3 paragraphs. CRITICAL: Do NOT list papers individually. Weave each paper into prose as clickable links. Every paper MUST appear linked.
+3. Deep Dive: 2-3 short paragraphs. Weave each paper into prose as clickable links. Every paper MUST appear linked. Keep paragraphs concise — this is a newsletter, not an essay.
 
 IMAGE RULES:
-- Each paper in the input data has a Teaser Images field with validated URLs (or empty if none exist).
-- In the Deep Dive, include ONE teaser image per paper, placed near where the paper is first discussed in the prose.
+- Include at most 1-2 teaser images in the deep dive.
 - Style: <img src=URL alt="figure" style="max-width:100%;max-height:400px;width:auto;height:auto;border-radius:8px;margin:12px 0;" />
 - If Teaser Images is empty for a paper, skip it. NEVER fabricate URLs.
 
 RULES:
 - Never use "for teams building X".
 - Be concrete. Name methods.
-- If no papers: <p>No new papers earlier this week.</p>
 - No emojis."""
 
 MONTH_PROMPT = """You write the THIS MONTH IN REVIEW section of the Talking Avatar Research Daily Digest newsletter.
@@ -85,19 +83,19 @@ STYLE RULES:
 
 STRUCTURE:
 1. Heading: This Month in Review as bold h2
-2. Overview: 2-3 TLDR bullets in callout box.
-3. Deep Dive: 2-3 paragraphs. CRITICAL: Do NOT list papers individually. Weave each paper into prose as clickable links. Every paper MUST appear linked.
+2. Overview: 2-3 TLDR bullets in callout box. Keep these punchy and accessible.
+3. Deep Dive: EXACTLY 2 paragraphs, no more. Pick the 4-5 most interesting/impactful papers and weave them into prose as clickable links. Do NOT try to cover every paper — be selective.
+4. Also Worth a Look: After the deep dive, add a compact bullet list of any remaining papers (title as clickable arXiv link + one sentence). This keeps the section scannable.
 
 IMAGE RULES:
-- Each paper in the input data has a Teaser Images field with validated URLs (or empty if none exist).
-- In the Deep Dive, include ONE teaser image per paper, placed near where the paper is first discussed in the prose.
+- Include at most 2-3 teaser images total in the deep dive — only for the papers you highlight most.
 - Style: <img src=URL alt="figure" style="max-width:100%;max-height:400px;width:auto;height:auto;border-radius:8px;margin:12px 0;" />
 - If Teaser Images is empty for a paper, skip it. NEVER fabricate URLs.
 
 RULES:
 - Never use "for teams building X".
 - Be concrete. Name methods.
-- If no papers: <p>No new papers earlier this month.</p>
+- Keep it tight. This section should be a quick scan, not a literature review.
 - No emojis."""
 
 
@@ -137,6 +135,10 @@ def write_sections(papers: dict) -> dict:
 
     sections = {}
     for section, prompt in [('today', TODAY_PROMPT), ('week', WEEK_PROMPT), ('month', MONTH_PROMPT)]:
+        if not papers[section]:
+            print(f"  Skipping {section} section (no papers)")
+            sections[f'{section}_html'] = ''
+            continue
         print(f"  Writing {section} section ({len(papers[section])} papers)...")
         sections[f'{section}_html'] = _call_claude(client, prompt, fmt(papers[section]))
 

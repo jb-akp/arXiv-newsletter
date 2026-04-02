@@ -5,13 +5,13 @@ from datetime import datetime, timedelta, timezone
 TOPIC_TERMS = (
     '(ti:"talking head" OR ti:"talking avatar" OR ti:"talking face" OR '
     'ti:"audio driven face" OR ti:"speech driven animation" OR ti:"face reenactment" OR '
-    'ti:"lip sync" OR ti:"neural avatar" OR ti:"digital human" OR '
+    'ti:"lip sync" OR ti:"neural avatar" OR '
     'ti:"audio-driven avatar" OR ti:"voice-driven avatar" OR ti:"head reenactment" OR '
-    'ti:"face generation" OR ti:"portrait animation" OR ti:"audio-visual speech" OR '
-    'ti:"3D face" OR ti:"facial animation" OR ti:"head synthesis" OR '
+    'ti:"portrait animation" OR '
+    'ti:"facial animation" OR ti:"head synthesis" OR '
     'ti:"face synthesis" OR ti:"gaussian splatting face" OR ti:"neural radiance face")'
 )
-CAT_FILTER = '(cat:cs.CV OR cat:cs.GR OR cat:cs.MM OR cat:cs.SD OR cat:cs.AI OR cat:eess.AS)'
+CAT_FILTER = '(cat:cs.CV OR cat:cs.GR OR cat:cs.MM OR cat:cs.AI)'
 
 DATE_WINDOWS = [
     {'label': 'today', 'days_back_from': 1, 'days_back_to': 0, 'max': 15},

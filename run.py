@@ -30,14 +30,15 @@ def main():
     papers = fetch_papers()
 
     total = sum(len(papers[s]) for s in ['today', 'week', 'month'])
-    print(f"  Total: {sum(len(papers[s]) for s in ['today', 'week', 'month'])} papers "
-          f"(today: {len(papers['today'])}, week: {len(papers['week'])}, month: {len(papers['month'])})")
+    counts = {s: len(papers[s]) for s in ['today', 'week', 'month']}
+    print(f"  Total: {total} papers (today: {counts['today']}, week: {counts['week']}, month: {counts['month']})")
 
     if total == 0:
         print("No new papers. Skipping digest.")
         return
 
-    print("\n[2/3] Writing sections...")
+    active = [s for s, c in counts.items() if c > 0]
+    print(f"\n[2/3] Writing sections: {', '.join(active)}...")
     sections = write_sections(papers)
 
     print("\n[3/3] Sending email...")

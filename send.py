@@ -6,9 +6,23 @@ from config import GMAIL_USER, GMAIL_APP_PASSWORD, GMAIL_TO, GMAIL_SENDER_NAME
 
 
 def assemble_html(sections: dict) -> str:
-    today_html = sections.get('today_html', '<p>No new papers today.</p>')
-    week_html = sections.get('week_html', '<p>No new papers earlier this week.</p>')
-    month_html = sections.get('month_html', '<p>No new papers earlier this month.</p>')
+    today_html = sections.get('today_html', '')
+    week_html = sections.get('week_html', '')
+    month_html = sections.get('month_html', '')
+
+    # Build content blocks, skipping empty sections
+    content_blocks = []
+    if today_html:
+        content_blocks.append(today_html)
+    if week_html:
+        content_blocks.append(week_html)
+    if month_html:
+        content_blocks.append(month_html)
+
+    if not content_blocks:
+        content_blocks.append('<p style="color:#372d09;font-size:16px;">No new talking avatar papers found. Check back tomorrow.</p>')
+
+    body_html = '\n\n'.join(content_blocks)
 
     date_str = datetime.now().strftime('%B %-d, %Y')
     year = datetime.now().year
@@ -30,15 +44,11 @@ def assemble_html(sections: dict) -> str:
 </td>
 </tr></table>
 
-{today_html}
-
-{week_html}
-
-{month_html}
+{body_html}
 
 <div style="border-top:3px solid #372d09;margin-top:32px;padding-top:24px;text-align:center;color:#8a7e5a;font-size:13px;padding-bottom:32px;">
 <div style="font-size:18px;font-weight:bold;color:#372d09;margin-bottom:8px;">Akapulu</div>
-<div>Talking Avatar Research Daily Digest &mdash; curated by AI, delivered for builders.</div>
+<div>Talking Avatar Research Daily Digest &mdash; powered by Akapulu</div>
 <div style="margin-top:12px;"><a href="#" style="color:#2294d2;text-decoration:underline;">Unsubscribe</a></div>
 <div style="margin-top:8px;">&copy; {year} Akapulu. All rights reserved.</div>
 </div>

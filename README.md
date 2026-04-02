@@ -14,9 +14,13 @@ Daily newsletter covering talking head, talking avatar, and audio-visual speech 
    export GMAIL_TO=jimmybradford55@yahoo.com  # optional, this is the default
    ```
 
-3. **Run**:
+3. **Install dependencies**:
    ```bash
-   cd ~/claudecode/skills/arxiv-digest
+   pip install -r requirements.txt
+   ```
+
+4. **Run**:
+   ```bash
    python3 run.py
    ```
 

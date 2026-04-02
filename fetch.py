@@ -3,6 +3,7 @@ import subprocess
 import time
 import urllib.parse
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from config import TOPIC_TERMS, CAT_FILTER, DATE_WINDOWS, date_str
 
 ARXIV_API = 'https://export.arxiv.org/api/query'
@@ -24,7 +25,6 @@ def _build_url(window: dict) -> str:
 
 
 def _fetch_url(url: str) -> str:
-    import subprocess
     result = subprocess.run(
         ['curl', '-s', '--max-time', '60', '-A', 'arxiv-digest/1.0', url],
         capture_output=True, timeout=65
@@ -102,6 +102,39 @@ def _parse_papers(xml_text: str, brief: bool) -> list:
     return papers
 
 
+def _extract_images_for_paper(pid: str) -> tuple[str, str]:
+    try:
+        html = _fetch_url(f'https://arxiv.org/html/{pid}')
+        imgs = re.findall(r'<img[^>]+src=["\']([^"\']+)["\'][^>]*>', html, re.I)
+        urls = []
+        for src in imgs:
+            if len(urls) >= 2:
+                break
+            filename = src.split('/')[-1].split('?')[0]
+            stem = re.sub(r'\.(png|jpg|jpeg)$', '', filename, flags=re.I)
+            if re.search(r'ltx_|logo|icon|badge|pixel|spacer', src, re.I):
+                continue
+            if not re.search(r'\.(png|jpg|jpeg)$', src, re.I):
+                continue
+            if len(stem) <= 3:
+                continue
+            # Skip diagrams, flowcharts, tables, and non-teaser figures
+            if re.search(r'uml|deploy|architec|flowchart|table|diagram|pipeline[_-]?fig|system[_-]?fig', stem, re.I):
+                continue
+            if not src.startswith('http'):
+                if src.startswith('./'):
+                    src = src[2:]
+                if src.startswith(pid):
+                    src = f'https://arxiv.org/html/{src}'
+                else:
+                    src = f'https://arxiv.org/html/{pid}/{src}'
+            urls.append(src)
+        return pid, ', '.join(urls)
+    except Exception as e:
+        print(f"    {pid}: image fetch failed ({str(e)[:50]})")
+        return pid, ''
+
+
 def _validate_images(papers_by_section: dict) -> dict:
     all_ids = set()
     for section_papers in papers_by_section.values():
@@ -112,38 +145,12 @@ def _validate_images(papers_by_section: dict) -> dict:
     print(f"  Validating images for {len(all_ids)} papers...")
     image_map = {}
 
-    for pid in all_ids:
-        try:
-            html = _fetch_url(f'https://arxiv.org/html/{pid}')
+    with ThreadPoolExecutor(max_workers=5) as pool:
+        futures = {pool.submit(_extract_images_for_paper, pid): pid for pid in all_ids}
+        for future in as_completed(futures):
+            pid, urls = future.result()
+            image_map[pid] = urls
 
-            imgs = re.findall(r'<img[^>]+src=["\']([^"\']+)["\'][^>]*>', html, re.I)
-            urls = []
-            for src in imgs:
-                if len(urls) >= 2:
-                    break
-                filename = src.split('/')[-1].split('?')[0]
-                stem = re.sub(r'\.(png|jpg|jpeg)$', '', filename, flags=re.I)
-                if re.search(r'ltx_|logo|icon|badge|pixel|spacer', src, re.I):
-                    continue
-                if not re.search(r'\.(png|jpg|jpeg)$', src, re.I):
-                    continue
-                if len(stem) <= 3:  # filter author initials like SM.png, VKR.jpg
-                    continue
-                if not src.startswith('http'):
-                    if src.startswith('./'):
-                        src = src[2:]
-                    if src.startswith(pid):
-                        src = f'https://arxiv.org/html/{src}'
-                    else:
-                        src = f'https://arxiv.org/html/{pid}/{src}'
-                urls.append(src)
-
-            image_map[pid] = ', '.join(urls)
-        except Exception as e:
-            image_map[pid] = ''
-            print(f"    {pid}: image fetch failed ({str(e)[:50]})")
-
-    # Apply validated images back to papers
     for section_papers in papers_by_section.values():
         for p in section_papers:
             pid = p['versioned_id']
