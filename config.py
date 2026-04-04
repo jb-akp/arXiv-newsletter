@@ -7,9 +7,10 @@ TOPIC_TERMS = (
     'ti:"audio driven face" OR ti:"speech driven animation" OR ti:"face reenactment" OR '
     'ti:"lip sync" OR ti:"neural avatar" OR '
     'ti:"audio-driven avatar" OR ti:"voice-driven avatar" OR ti:"head reenactment" OR '
-    'ti:"portrait animation" OR '
+    'ti:"portrait animation" OR ti:"video-driven avatar" OR '
     'ti:"facial animation" OR ti:"head synthesis" OR '
-    'ti:"face synthesis" OR ti:"gaussian splatting face" OR ti:"neural radiance face")'
+    'ti:"face synthesis" OR ti:"gaussian splatting face" OR ti:"neural radiance face" OR '
+    'ti:"digital human" OR ti:"face generation" OR ti:"audio-visual speech")'
 )
 CAT_FILTER = '(cat:cs.CV OR cat:cs.GR OR cat:cs.MM OR cat:cs.AI)'
 

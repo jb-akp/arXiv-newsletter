@@ -63,6 +63,7 @@ STRUCTURE:
 1. Heading: This Week in Review as bold h2
 2. Overview: 2-3 TLDR bullets in callout box. Lead with technical contributions, not explanations of why avatars matter.
 3. Deep Dive: 2-3 short paragraphs. Weave each paper into prose as clickable links. Every paper MUST appear linked. Focus on what's technically novel and whether results are practically useful (latency, quality, real-time viability).
+4. End each deep dive paragraph with a bold italic "The Bottom Line" sentence — is this worth reading, and for whom?
 
 IMAGE RULES:
 - Include at most 1-2 teaser images in the deep dive.
@@ -89,8 +90,8 @@ STYLE RULES:
 STRUCTURE:
 1. Heading: This Month in Review as bold h2
 2. Overview: 2-3 TLDR bullets in callout box. Lead with technical trends, not general context.
-3. Deep Dive: EXACTLY 2 paragraphs, no more. Pick the 4-5 most impactful papers — prioritize real-time methods, novel representations, and anything with practical latency/quality results. Weave them into prose as clickable links.
-4. Also Worth a Look: Compact bullet list of remaining papers (title as clickable arXiv link + one sentence on the technical contribution).
+3. Deep Dive: 2-3 paragraphs. Pick the 4-5 most impactful papers — prioritize real-time methods, novel representations, and anything with practical latency/quality results. Weave them into prose as clickable links. Don't cram too many papers into a single paragraph — give each idea room to breathe.
+4. Also Worth a Look: Compact bullet list of remaining papers. Each entry: paper title as bold clickable <a href=arXiv link>, em dash, one sentence on the technical contribution. No numbering.
 
 IMAGE RULES:
 - Include at most 2-3 teaser images total in the deep dive — only for the papers you highlight most.

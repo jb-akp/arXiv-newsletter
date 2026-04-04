@@ -108,7 +108,7 @@ def _extract_images_for_paper(pid: str) -> tuple[str, str]:
         imgs = re.findall(r'<img[^>]+src=["\']([^"\']+)["\'][^>]*>', html, re.I)
         urls = []
         for src in imgs:
-            if len(urls) >= 2:
+            if len(urls) >= 3:
                 break
             filename = src.split('/')[-1].split('?')[0]
             stem = re.sub(r'\.(png|jpg|jpeg)$', '', filename, flags=re.I)
@@ -118,8 +118,8 @@ def _extract_images_for_paper(pid: str) -> tuple[str, str]:
                 continue
             if len(stem) <= 3:
                 continue
-            # Skip diagrams, flowcharts, tables, and non-teaser figures
-            if re.search(r'uml|deploy|architec|flowchart|table|diagram|pipeline[_-]?fig|system[_-]?fig', stem, re.I):
+            # Skip UI elements and non-content images
+            if re.search(r'uml|deploy|flowchart|table|diagram', stem, re.I):
                 continue
             if not src.startswith('http'):
                 if src.startswith('./'):
@@ -168,7 +168,7 @@ def fetch_papers() -> dict:
             time.sleep(3)  # arXiv API rate limit: 1 req/3s
         print(f"  Fetching {label}...")
         url = _build_url(window)
-        brief = label != 'today'
+        brief = label == 'month'
         try:
             xml_text = _fetch_url(url)
             result[label] = _parse_papers(xml_text, brief)

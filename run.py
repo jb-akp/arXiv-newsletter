@@ -40,6 +40,7 @@ def main():
     active = [s for s, c in counts.items() if c > 0]
     print(f"\n[2/3] Writing sections: {', '.join(active)}...")
     sections = write_sections(papers)
+    sections['paper_count'] = total
 
     print("\n[3/3] Sending email...")
     assemble_and_send(sections)
